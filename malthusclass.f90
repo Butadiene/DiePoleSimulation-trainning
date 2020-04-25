@@ -1,59 +1,37 @@
-module odd_class
-    implicit none
-    type,abstract :: odd
-    contains
-        procedure(odd_getInitialVal),deferred :: getInitialVal
-        procedure(odd_f),deferred :: f
-    end type odd
-        
-    interface
-        double precision function odd_getInitialVal(this)
-            import odd
-            class(odd) this
-        end function odd_getInitialVal
-
-        double precision function odd_f(this,x,t)
-            import odd
-            class(odd) this
-            double precision x
-            double precision t
-        end function odd_f
-    end interface
-end module odd_class
-
 module Malthus_class
-    use odd_class
+    use ode_interface
     implicit none
-    
-    type,extends(odd) :: Malthus
-        private 
-        double precision a;
-        double precision initialVal;
+  
+    type,extends(ODE) :: Malthus
+        PRIVATE 
+        DOUBLE PRECISION :: a
+        DOUBLE PRECISION :: initialVal
     contains 
-        procedure :: Malthus => Malthus_Malthus
-        procedure :: getInitialVal => Malthus_getInitialVal
-        procedure :: f => Malthus_f
+        procedure :: getInitialVal => malthus_getInitialVal
+        procedure :: f => malthus_f
     end type Malthus
 
+    interface Malthus
+        module procedure init_Malthus
+    end interface Malthus
 contains
 
-    subroutine Malthus_Malthus(this,a,initialVal)
-        class(Malthus) this
-        double precision a
-        double precision initialVal
-        this%a = a
-        this%initialVal = initialVal
-    end subroutine Malthus_Malthus
+    type(Malthus) function init_Malthus(a,initialVal)
+        DOUBLE PRECISION,INTENT(IN)::a
+        DOUBLE PRECISION,INTENT(IN)::initialVal
+        init_Malthus%a = a
+        init_Malthus%initialVal = initialVal
+    end function init_Malthus
 
-    double precision function Malthus_getInitialVal(this)
+    DOUBLE PRECISION function malthus_getInitialVal(this)
         class(Malthus) this
-        Malthus_getInitialVal = this%initialVal
-    end function Malthus_getInitialVal
+        malthus_getInitialVal = this%initialVal
+    end function malthus_getInitialVal
 
-    double precision function Malthus_f (this,x,t)
+    DOUBLE PRECISION function malthus_f (this,x,t)
         class(Malthus) this
-        double precision x
-        double precision t
-        Malthus_f = this%a*x
-    end function Malthus_f
+        DOUBLE PRECISION x
+        DOUBLE PRECISION t
+        malthus_f = this%a*x
+    end function malthus_f
 end module Malthus_class
