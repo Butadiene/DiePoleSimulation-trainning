@@ -23,26 +23,29 @@ contains
         init_Euler%timestep = timestep
     end function init_Euler
 
-    DOUBLE PRECISION function euler_calcNextX(this,sys,currentX,currentT)
-        class(Euler) this   
-        class(ODE) sys
-        DOUBLE PRECISION currentX
-        DOUBLE PRECISION currentT
+    function euler_calcNextX(this,sys,currentX,currentT)
+        class(Euler),INTENT(IN)::this   
+        class(ODE),INTENT(IN)::sys
+        DOUBLE PRECISION ,allocatable::euler_calcNextX(:)
+        DOUBLE PRECISION ,INTENT(IN)::currentX(:)
+        DOUBLE PRECISION ,INTENT(IN)::currentT
+        allocate(euler_calcNextX(sys%getXDimension()))
         euler_calcNextX = currentX+sys%f(currentX,currentT)*this%dt 
     end function euler_calcNextX
 
     function euler_getSolution(this,sys)
-        class(Euler) this
-        class(ODE) sys 
-        DOUBLE PRECISION,allocatable,dimension(:) :: euler_getSolution
-        DOUBLE PRECISION,allocatable,dimension(:) :: xs
+        class(Euler),INTENT(IN) ::this
+        class(ODE) ,INTENT(IN)::sys 
+        DOUBLE PRECISION,allocatable :: euler_getSolution(:,:)
+        DOUBLE PRECISION,allocatable :: xs(:,:)
         INTEGER i
-        allocate(xs(this%timestep))
-        xs(1) = sys%getInitialVal()
+        
+        allocate(xs(sys%getXDimension(),this%timestep))
+        xs(:,1) = sys%getInitialVal()
         do i=2,this%timeStep
-            xs(i) = euler_calcNextX(this,sys,xs(i-1),dble(i)*this%dt)
+            xs(:,i) = euler_calcNextX(this,sys,xs(:,i-1),dble(i)*this%dt)
         end do
-        allocate(euler_getSolution(this%timestep))
+        allocate(euler_getSolution(sys%getXDimension(),this%timestep))
 
         euler_getSolution = xs
 
