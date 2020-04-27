@@ -7,6 +7,8 @@ module Writeout_class
         procedure :: WritetoCSV => Writeout_WritetoCSV
     end type Writeout
 
+    private Writeout_WritetoCSV
+
     interface Writeout
         module procedure init_Writeout
     end interface Writeout
@@ -26,7 +28,7 @@ module Writeout_class
         open(17, file=filename, status='replace')
         do i=1,dimsize(2)
             do  j =1,dimsize(1)
-                write (17,"(f10.5)",advance='no') this%solution(j,i)
+                write (17,"(f14.6)",advance='no') this%solution(j,i)
                 if(j<dimsize(1)) then
                     write (17,"(A)",advance='no') ','
                 end if

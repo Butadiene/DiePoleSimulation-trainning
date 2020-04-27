@@ -13,6 +13,8 @@ module Malthus_class
         procedure :: f => malthus_f
     end type Malthus
 
+    private malthus_f,malthus_getInitialVal,malthus_getXDimension,init_Malthus
+
     interface Malthus
         module procedure init_Malthus
     end interface Malthus
@@ -50,4 +52,5 @@ contains
         allocate(malthus_f(this%x_dimension))
         malthus_f = this%a*x
     end function malthus_f
+
 end module Malthus_class

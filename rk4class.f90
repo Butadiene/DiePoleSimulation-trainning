@@ -11,6 +11,8 @@ module RK4_class
         procedure :: getSolution => rk4_getSolution
     end type RK4
  
+    private rk4_CalcNextX,rk4_getSolution
+
     interface RK4
         module procedure init_RK4
     end interface RK4

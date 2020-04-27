@@ -6,7 +6,7 @@ module ode_interface
         procedure(ode_getXDimension),deferred :: getXDimension
         procedure(ode_f),deferred :: f
     end type ODE
-        
+        private ode_getXDimension,ode_getInitialVal,ode_f
     interface
         INTEGER function ode_getXDimension(this)
             import ODE
@@ -39,7 +39,7 @@ module scheme_interface
         procedure(scheme_calcNextX),deferred :: calcNextX
         procedure(scheme_getSolution),deferred :: getSolution
     end type Scheme
-
+        private scheme_calcNextX,scheme_getSolution
     interface
         function scheme_calcNextX(this,sys,currentX,currentT)
             import Scheme

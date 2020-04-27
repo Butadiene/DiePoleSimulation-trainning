@@ -11,6 +11,8 @@ module Euler_class
         procedure :: getSolution => euler_getSolution
     end type Euler
  
+    private euler_calcNextX,euler_getSolution
+
     interface Euler
         module procedure init_Euler
     end interface Euler

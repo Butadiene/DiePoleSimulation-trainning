@@ -15,6 +15,8 @@ module NumericalAnalytics_class
         procedure :: getSolution => Numerical_getSolution
     end type NumericalAnalytics
 
+    private Numerical_calcResult,Numerical_getSolution
+
     interface NumericalAnalytics
         module procedure init_NumericalAnalytics
     end interface NumericalAnalytics
