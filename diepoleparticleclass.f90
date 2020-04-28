@@ -3,6 +3,8 @@ module DiepoleParticle_class
     use ode_interface
     implicit none
   
+    
+
     type,extends(ODE) :: DiepoleParticle
         PRIVATE 
         DOUBLE PRECISION ,allocatable:: initialVal(:)
@@ -49,15 +51,16 @@ contains
         DOUBLE PRECISION ,INTENT(IN)::x(:) ! (x_1,x_2,x_3,v_1,v_2,v_3)
         DOUBLE PRECISION ,INTENT(IN)::t
         DOUBLE PRECISION ,allocatable::diepoleparticle_f(:)
-        DOUBLE PRECISION :: electroField(3)
+        DOUBLE PRECISION :: electroField(3) = 0.0
         DOUBLE PRECISION :: velocity(3)
         DOUBLE PRECISION :: acceleration(3)
         DOUBLE PRECISION :: coffcient
         DOUBLE PRECISION :: magnetfield(3)
-        electroField(3) = 0.0d0
+        math = mathcommons()
+        electroField = 0.0d0
         magnetfield = this%magnetField(x(1:3))
         velocity = x(4:6)
-        coffcient = 1.0d0
+        coffcient =math%getEme()
         acceleration = coffcient*(electroField+math%cross(velocity,magnetfield))
         allocate(diepoleparticle_f(this%x_dimension))
         diepoleparticle_f(1:3)=velocity
@@ -66,6 +69,7 @@ contains
 
     function diepoleparticle_magnetField (this,x)
         class(DiepoleParticle) this
+        class(mathcommons),ALLOCATABLE::math
         DOUBLE PRECISION ::diepoleparticle_magnetField(3)
         DOUBLE PRECISION ,INTENT(IN)::x(3)
         DOUBLE PRECISION ::r
@@ -74,12 +78,13 @@ contains
         DOUBLE PRECISION ::e_rad(3)
         DOUBLE PRECISION ::e_lamda(3)
         DOUBLE PRECISION :: coffcient
+        math = mathcommons()
         r=sqrt(dot_product(x,x))
         lambda=acos(x(3)/r)
         fai = atan2(x(1),x(2))
         e_rad = (/sin(lambda)*cos(fai),sin(lambda)*sin(fai),cos(lambda)/)
         e_lamda = (/cos(lambda)*cos(fai),cos(lambda)*sin(fai),-sin(lambda)/)
-        coffcient = 1.0d0
-        diepoleparticle_magnetField = 1.0d0/(r**3)*(-2.0d0*sin(lambda)*e_rad+cos(lambda)*e_lamda)
+        coffcient = math%getMu_o()*math%getMe()/(4.0d0*math%getPI())
+        diepoleparticle_magnetField = coffcient*1.0d0/(r**3)*(-2.0d0*sin(lambda)*e_rad+cos(lambda)*e_lamda)
     end function diepoleparticle_magnetField
 end module DiepoleParticle_class
