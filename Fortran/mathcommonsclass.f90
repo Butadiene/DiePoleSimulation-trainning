@@ -32,7 +32,7 @@ contains
         init_mathcommons%Mu_o = 1.25663706*10.0d0**(-6)
         init_mathcommons%Me = 8.05*10.0d0**22
         init_mathcommons%Re = 6.3781*10.0d0**6
-        init_mathcommons%Eme = 1.758820d0*10**11
+        init_mathcommons%Eme = -1.758820d0*10**11
         init_mathcommons%c = 299792458d0
     end function init_mathcommons
 
