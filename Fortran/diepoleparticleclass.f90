@@ -80,10 +80,10 @@ contains
         DOUBLE PRECISION :: coffcient
         math = mathcommons()
         r=sqrt(dot_product(x,x))
-        lambda=acos(x(3)/r)
-        fai = atan2(x(1),x(2))
-        e_rad = (/sin(lambda)*cos(fai),sin(lambda)*sin(fai),cos(lambda)/)
-        e_lamda = (/cos(lambda)*cos(fai),cos(lambda)*sin(fai),-sin(lambda)/)
+        lambda=math%getPI()*0.5d0-acos(x(3)/r)
+        fai = atan2(x(2),x(1))
+        e_rad = x/r!(/cos(lambda)*cos(fai),cos(lambda)*sin(fai),sin(lambda)/)
+        e_lamda = (/-sin(lambda)*cos(fai),-sin(lambda)*sin(fai),cos(lambda)/)
         coffcient = math%getMu_o()*math%getMe()/(4.0d0*math%getPI())
         diepoleparticle_magnetField = coffcient*1.0d0/(r**3)*(-2.0d0*sin(lambda)*e_rad+cos(lambda)*e_lamda)
     end function diepoleparticle_magnetField
