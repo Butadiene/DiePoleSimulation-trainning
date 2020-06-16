@@ -8,7 +8,7 @@ module mathcommons_class
         DOUBLE PRECISION:: Me !Earth Dipole moment
         DOUBLE PRECISION:: Re ! Earth radius
         DOUBLE PRECISION:: Eme   !電子の比電荷
-        DOUBLE PRECISION:: c  
+        DOUBLE PRECISION:: C  
     contains
         procedure :: cross => mathCommons_cross
         procedure :: getPI => mathCommons_getPI
@@ -17,6 +17,7 @@ module mathcommons_class
         procedure :: getRe => mathCommons_getRe
         procedure :: getEme => mathCommons_getEme
         procedure :: getC => mathCommons_getC
+        procedure :: getOmega => mathCommons_getOmega
      end type mathcommons
 
     private mathCommons_cross,mathCommons_getPI,mathCommons_getMu_o,mathCommons_getMe,mathCommons_getRe,mathCommons_getC
@@ -32,8 +33,8 @@ contains
         init_mathcommons%Mu_o = 1.25663706*10.0d0**(-6)
         init_mathcommons%Me = 8.05*10.0d0**22
         init_mathcommons%Re = 6.3781*10.0d0**6
-        init_mathcommons%Eme = -1.758820d0*10**11
-        init_mathcommons%c = 299792458d0
+        init_mathcommons%Eme = 1.758820d0*10**11
+        init_mathcommons%C = 299792458d0
     end function init_mathcommons
 
     function mathCommons_cross(this,x,y)
@@ -75,4 +76,9 @@ contains
         Class(mathcommons) ::this
         mathCommons_getC = this%C
     end function  mathCommons_getC
+
+    DOUBLE PRECISION function mathCommons_getOmega(this)
+        Class(mathcommons) ::this
+        mathCommons_getOmega = this%getMu_o()*this%getMe()/((this%getRe())**3.0d0*4.0d0*this%getPI())*this%getEme()
+    end function  mathCommons_getOmega
 end module mathcommons_class
