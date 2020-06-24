@@ -26,7 +26,7 @@ module Writeout_class
         INTEGER i,j
         dimsize = shape(this%solution)
         open(17, file=filename, status='replace')
-        do i=1,dimsize(2),10
+        do i=1,dimsize(2),1
             do  j =1,dimsize(1)
                 write (17,"(E15.6)",advance='no') this%solution(j,i)
                 if(j<dimsize(1)) then

@@ -60,11 +60,12 @@ contains
         electroField = 0.0d0
         magnetfield = this%magnetField(x(1:3))
         velocity = x(4:6)
-        coffcient =1.0d0 !正規化 math%getEme()
+        coffcient =-1.0d0 !正規化 math%getEme()
         acceleration = coffcient*(electroField+math%cross(velocity,magnetfield))
         allocate(diepoleparticle_f(this%x_dimension))
         diepoleparticle_f(1:3)=velocity
         diepoleparticle_f(4:6)=acceleration
+        diepoleparticle_f(7) = sqrt(dot_product(magnetfield,magnetfield))
     end function diepoleparticle_f
 
     function diepoleparticle_magnetField (this,x)
@@ -86,7 +87,7 @@ contains
         e_rad = x/r!(/cos(lambda)*cos(fai),cos(lambda)*sin(fai),sin(lambda)/)
         e_lamda = (/-sin(lambda)*cos(fai),-sin(lambda)*sin(fai),cos(lambda)/)
         coffcient = 1.0d0!math%getMu_o()*math%getMe()/(4.0d0*math%getPI())
-        radScale = math%getRe()*math%getOmega()/math%getC()
+        radScale = math%getB_Eq_Rad()*math%getRe()*math%getOmega()/math%getC()
         diepoleparticle_magnetField = coffcient*1.0d0/((r/radScale)**3)*(-2.0d0*sin(lambda)*e_rad+cos(lambda)*e_lamda)
     end function diepoleparticle_magnetField
 end module DiepoleParticle_class

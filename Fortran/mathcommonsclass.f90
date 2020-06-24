@@ -9,6 +9,7 @@ module mathcommons_class
         DOUBLE PRECISION:: Re ! Earth radius
         DOUBLE PRECISION:: Eme   !電子の比電荷
         DOUBLE PRECISION:: C  
+        DOUBLE PRECISION:: B_Eq_Rad
     contains
         procedure :: cross => mathCommons_cross
         procedure :: getPI => mathCommons_getPI
@@ -18,9 +19,11 @@ module mathcommons_class
         procedure :: getEme => mathCommons_getEme
         procedure :: getC => mathCommons_getC
         procedure :: getOmega => mathCommons_getOmega
+        procedure :: getB_Eq_Rad => mathCommons_getB_Eq_Rad
      end type mathcommons
 
     private mathCommons_cross,mathCommons_getPI,mathCommons_getMu_o,mathCommons_getMe,mathCommons_getRe,mathCommons_getC
+    private mathCommons_getOmega,mathCommons_getB_Eq_Rad
 
     interface mathcommons
         module procedure init_mathcommons
@@ -35,6 +38,7 @@ contains
         init_mathcommons%Re = 6.3781*10.0d0**6
         init_mathcommons%Eme = 1.758820d0*10**11
         init_mathcommons%C = 299792458d0
+        init_mathcommons%B_Eq_Rad = 12.0d0
     end function init_mathcommons
 
     function mathCommons_cross(this,x,y)
@@ -79,6 +83,13 @@ contains
 
     DOUBLE PRECISION function mathCommons_getOmega(this)
         Class(mathcommons) ::this
-        mathCommons_getOmega = this%getMu_o()*this%getMe()/((this%getRe())**3.0d0*4.0d0*this%getPI())*this%getEme()
+        DOUBLE PRECISION eqrad
+        eqrad = this%getB_Eq_Rad()
+        mathCommons_getOmega = this%getMu_o()*this%getMe()/((eqrad*this%getRe())**3.0d0*4.0d0*this%getPI())*this%getEme()
     end function  mathCommons_getOmega
+
+    DOUBLE PRECISION function mathCommons_getB_Eq_Rad(this)
+        Class(mathcommons) ::this
+        mathCommons_getB_Eq_Rad = this%B_Eq_Rad
+    end function  mathCommons_getB_Eq_Rad
 end module mathcommons_class
